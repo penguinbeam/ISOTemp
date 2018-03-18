@@ -13,7 +13,7 @@ if environ.get("ISOTEMPDATADIR") is not None:
 else:
   logDir = "."
 
-if environ.get("ISOTEMPBTSRC")
+if environ.get("ISOTEMPBTSRC"):
   isBTSource = os.environ["ISOTEMPBTSRC"]
 else:
   isBTSource = False
