@@ -81,6 +81,7 @@ with GracefulInterruptHandler() as h:
         while True:
                 timestamp = time.strftime("%H:%M:%S %d/%m/%y")
                 tempForLog = [];
+                dataString = ""
 
                 for x in xrange(0, len(thermoDevFiles)):
 
@@ -93,11 +94,15 @@ with GracefulInterruptHandler() as h:
                         temperature = temperature / 1000
                         tempForLog.append(round(temperature, 2));
 
-                if isBTSlave:
-                       sendBTMessageTo(btMasterMAC, thermoDevFiles[x] +'='+ str(tempForLog[x]))
+                        if isBTSlave:
+                                sendBTMessageTo(btMasterMAC, thermoDevFiles[x] +'='+ str(tempForLog[x]))
+
+                        if (x>0):
+                                dataString += ', '
+                        dataString += '\"' + thermoDevFiles[x] + '\":\"' + str(tempForLog[x]) + '\"'
 
                 dataLog = open(logFilename, "a", 1)
-                dataLog.write('{\"timestamp\":\"' + timestamp + '\",\"' + thermoDevFiles[x] + '\":\"' + str(tempForLog[x]) + '\"}\n')
+                dataLog.write('{\"timestamp\":\"' + timestamp + '\", ' + dataString + '}\n')
                 dataLog.close()
 
                 time.sleep(300)
