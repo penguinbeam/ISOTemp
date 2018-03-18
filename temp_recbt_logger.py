@@ -6,6 +6,8 @@ import time
 import os
 from os import environ
 
+import re
+
 #JSON log file for outputing temperatures
 if environ.get("ISOTEMPDATADIR") is not None:
   logFilename = os.environ["ISOTEMPDATADIR"] + "/ISOTEMPbtdata.log"
@@ -30,18 +32,20 @@ def receiveMessages():
       data = client_sock.recv(size)
       if data:
         print "Accepted connection from " + str(clientAddress)
-        print "received [%s]" % data
-        #client_sock.send("Thanks")
-        device = data.split("=")[0]
-        temperature = data.split("=")[1]
+        if re.match("^[0-9][0-9]-[0-9a-f]+=[0-9]?[0-9]?[0-9]?.?[0-9]?[0-9]$", data):
+          print "received [%s]" % data
+          device = data.split("=")[0]
+          temperature = data.split("=")[1]
 
-        timestamp = time.strftime("%H:%M:%S %d/%m/%y")
-        dataString = '\"' + device + '\":\"' + str(temperature) + '\"'
+          timestamp = time.strftime("%H:%M:%S %d/%m/%y")
+          dataString = '\"' + device + '\":\"' + str(temperature) + '\"'
 
-        dataLog = open(logFilename, "a", 1)
-        dataLog.write('{\"timestamp\":\"' + timestamp + '\", ' + dataString + '}\n')
-        dataLog.close()
-
+          dataLog = open(logFilename, "a", 1)
+          dataLog.write('{\"timestamp\":\"' + timestamp + '\", ' + dataString + '}\n')
+          dataLog.close()
+        else:
+          client_sock.send("You suck! Invalid data...")
+          print "received crap data"
       client_sock.close()
     except Exception as e:
       print("Closing socket")
