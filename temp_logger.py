@@ -24,7 +24,6 @@ if environ.get("ISOTEMPDATADIR") is not None:
 else:
   logFilename = "./ISOTEMPdata.log"
 
-
 if environ.get("ISOTEMPBTS") is not None:
   isBTSlave = os.environ["ISOTEMPBTS"]
 else:

@@ -13,6 +13,11 @@ if environ.get("ISOTEMPDATADIR") is not None:
 else:
   logDir = "."
 
+if environ.get("ISOTEMPBTSRC")
+  isBTSource = os.environ["ISOTEMPBTSRC"]
+else:
+  isBTSource = False
+
 file = logDir + '/high_levels.json'
 with open(file) as myfile:
     highDataLine = (list(myfile)[-1])
@@ -21,7 +26,10 @@ file = logDir + '/low_levels.json'
 with open(file) as myfile:
     lowDataLine = (list(myfile)[-1])
 
-file = logDir + '/ISOTEMPdata.log'
+if isBTSource:
+    file = logDir + '/ISOTEMPbtdata.log'
+else:
+    file = logDir + '/ISOTEMPdata.log'
 with open(file) as myfile:
     tempDataLine = (list(myfile)[-1])
 
