@@ -1,0 +1,3 @@
+ cat /sys/bus/w1/devices/28-000006532e6e/w1_slave
+ff 01 4b 46 7f ff 01 10 a1 : crc=a1 YES
+ff 01 4b 46 7f ff 01 10 a1 t=31937
