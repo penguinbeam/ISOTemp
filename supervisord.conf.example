@@ -1,5 +1,5 @@
 [program:tempwatch]
-command=PATH2SCRIPTS/temp_logger.py
+command=/opt/ISOtemp/temp_logger.py
 autostart=true
 autorestart=true
 startretries=3
@@ -10,7 +10,7 @@ environment=ISOTEMPSENSORPATH='FILLMEIN',ISOTEMPBTMMAC='not_applicable',ISOTEMPD
 
 
 [program:tempbtwatch]
-command=PATH2SCRIPTS/temp_recbt_logger.py
+command=/opt/ISOtemp/temp_recbt_logger.py
 autostart=true
 autorestart=true
 startretries=3
