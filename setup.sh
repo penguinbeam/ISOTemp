@@ -26,7 +26,12 @@ sudo cp /opt/ISOtemp/supervisord.conf.example /etc/supervisor/conf.d/isotemp.con
 echo "Find out BD Address for collecting server"
 echo "sudo hciconfig hci0"
 echo "On bluetooth receiving device make discoverable"
+echo "sudo hciconfig hci0 up"
 echo "sudo hciconfig hci0 piscan"
 
 
 echo "Now edit your supervisor config isotemp.conf filling in the environment variables, remove the block not needed (IE no receiver on the logger, no transmitter on the receiver)"
+
+#add redis support if needed
+sudo apt-get install redis-server
+sudo apt-get install python-redis
