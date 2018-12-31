@@ -7,10 +7,11 @@ sudo apt-get install -y python-requests
 sudo apt-get install -y python-bluez
 
 #Install dependancy for the MI home trigger
-sudo apt-get install python-requests
+ sudo apt-get install python-requests
+ sudo apt-get install python-bluez
 
-sudo /sbin/modprobe w1-gpio
-sudo /sbin/modprobe w1-therm
+ sudo /sbin/modprobe w1-gpio
+ sudo /sbin/modprobe w1-therm
 
 echo "w1-gpio" | sudo tee -a /etc/modules
 echo "w1-therm" | sudo tee -a /etc/modules

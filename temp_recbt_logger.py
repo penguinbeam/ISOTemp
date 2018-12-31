@@ -8,6 +8,15 @@ from os import environ
 
 import re
 
+if environ.get("DONTUSEREDIS"):
+  useRedis = environ.get("DONTUSEREDIS")
+else:
+  useRedis = True
+
+if useRedis:
+  import redis
+  redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+
 #JSON log file for outputing temperatures
 if environ.get("ISOTEMPDATADIR") is not None:
   logFilename = os.environ["ISOTEMPDATADIR"] + "/ISOTEMPbtdata.log"
@@ -43,6 +52,11 @@ def receiveMessages():
           dataLog = open(logFilename, "a", 1)
           dataLog.write('{\"timestamp\":\"' + timestamp + '\", ' + dataString + '}\n')
           dataLog.close()
+
+          if useRedis:
+            #Send each output to redis
+            redis_db.delete(device)
+            redis_db.lpush(device, *[temperature, timestamp])
         else:
           client_sock.send("You suck! Invalid data...")
           print "received crap data"

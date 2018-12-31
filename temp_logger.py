@@ -12,6 +12,17 @@ import bluetooth
 import os
 from os import environ
 
+if environ.get("DONTUSEREDIS"):
+  useRedis = environ.get("DONTUSEREDIS")
+else:
+  useRedis = True
+
+if useRedis:
+  import redis
+  redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+
+#redis_db.keys()
+
 #Most likely /sys/bus/w1/devices/
 thermoSensorPath = os.environ["ISOTEMPSENSORPATH"]
 
@@ -28,6 +39,7 @@ if environ.get("ISOTEMPBTS") is not None:
   isBTSlave = os.environ["ISOTEMPBTS"]
 else:
   isBTSlave = False
+isBTSlave = False
 
 def sendBTMessageTo(targetBluetoothMacAddress,message):
   port = 3
@@ -91,7 +103,16 @@ with GracefulInterruptHandler() as h:
                         temperature_data = fileText.split()[-1]
                         temperature = float(temperature_data[2:])
                         temperature = temperature / 1000
-                        tempForLog.append(round(temperature, 2));
+                        fmtTemp = round(temperature, 2)
+                        tempForLog.append(fmtTemp);
+
+                        if useRedis:
+                            #Send each output to redis
+                            #redis_db.set(thermoDevFiles[x], 'blah')
+                            redis_db.delete(thermoDevFiles[x])
+                            redis_db.lpush(thermoDevFiles[x], *[fmtTemp, timestamp])
+                            #redis_db.keys()
+                            #redis_db.lrange('1',0,-1)[0]
 
                         if isBTSlave:
                                 sendBTMessageTo(btMasterMAC, thermoDevFiles[x] +'='+ str(tempForLog[x]))
@@ -109,4 +130,3 @@ with GracefulInterruptHandler() as h:
                         print "\nClosing gracefully"
                         dataLog.close()
                         break
-
